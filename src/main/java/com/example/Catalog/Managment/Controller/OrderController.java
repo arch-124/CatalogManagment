@@ -3,6 +3,8 @@ package com.example.Catalog.Managment.Controller;
 import com.example.Catalog.Managment.Dto.OrdersDto;
 import com.example.Catalog.Managment.Service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,12 +17,14 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public OrdersDto placeOrder(@RequestBody OrdersDto dto) {
-        return orderService.placeOrder(dto);
+    public ResponseEntity<OrdersDto> placeOrder(@RequestBody OrdersDto dto) {
+       OrdersDto createdorder = orderService.placeOrder(dto);
+       return ResponseEntity.status(HttpStatus .CREATED).body(createdorder);
     }
 
     @GetMapping("/{id}")
-    public OrdersDto getById(@PathVariable int id) {
-        return orderService.getById(id);
+    public ResponseEntity <OrdersDto> getById(@PathVariable int id) {
+        OrdersDto orders =  orderService.getById(id);
+        return ResponseEntity.ok(orders);
     }
 }

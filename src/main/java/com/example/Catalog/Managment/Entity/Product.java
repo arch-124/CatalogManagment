@@ -27,7 +27,7 @@ public class Product
 
     private boolean availability;
 
-    @OneToOne(mappedBy = "product")
+    @OneToOne(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Inventory inventory;
 
 

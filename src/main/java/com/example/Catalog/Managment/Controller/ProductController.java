@@ -3,6 +3,9 @@ package com.example.Catalog.Managment.Controller;
 import com.example.Catalog.Managment.Dto.ProductDto;
 import com.example.Catalog.Managment.Service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+//import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,30 +16,38 @@ public class ProductController
 {
     private final ProductService service;
     @PostMapping
-        public ProductDto create(@RequestBody ProductDto dto)
+        public ResponseEntity<ProductDto> create(@RequestBody ProductDto dto)
         {
-            return service.createProduct(dto);
+           ProductDto created =  service.createProduct(dto);
+           return ResponseEntity.status(HttpStatus.CREATED).body(created);
         }
+
+
     @GetMapping("/{id}")
-            public ProductDto getProductbyid(@PathVariable int id)
+            public ResponseEntity<ProductDto> getProductbyid(@PathVariable int id)
             {
-                return service.getProductbyid(id);
+                ProductDto product = service.getProductbyid(id);
+                return ResponseEntity.ok(product);
             }
     @GetMapping
-        public List<ProductDto> getAll()
+        public ResponseEntity<List<ProductDto>> getAll()
         {
-            return service.getAllproducts();
+           List<ProductDto> products = service.getAllproducts();
+           return ResponseEntity.ok(products);
+
         }
     @PutMapping("/{id}")
-        public ProductDto updateProduct(@PathVariable int id, @RequestBody ProductDto dto)
+        public ResponseEntity<ProductDto> updateProduct(@PathVariable int id, @RequestBody ProductDto dto)
         {
             dto.setId(id);
-            return service.updateProduct(dto);
+            ProductDto updated =  service.updateProduct(dto);
+            return ResponseEntity.ok(updated);
         }
     @DeleteMapping("/{id}")
-        public void deleteProduct(@PathVariable int id)
+        public ResponseEntity<Void> deleteProduct(@PathVariable int id)
         {
             service.deleteProduct(id);
+            return ResponseEntity.noContent().build();
         }
 
 

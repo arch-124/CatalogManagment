@@ -8,8 +8,10 @@ import com.example.Catalog.Managment.Repository.InventoryRepository;
 import com.example.Catalog.Managment.Repository.ProductRepository;
 import com.example.Catalog.Managment.Service.InventoryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InventoryServiceImpl implements InventoryService
@@ -31,7 +33,8 @@ public class InventoryServiceImpl implements InventoryService
             Inventory inventorySaved = inventoryRepository.save(inventory);
             return inventoryMapper.toDto(inventorySaved);
         } catch (Exception e) {
-            throw new RuntimeException("failed to return category", e);
+            log.error("failed to return category", e);
+            return null;
         }
 
 
@@ -48,7 +51,10 @@ public class InventoryServiceImpl implements InventoryService
         }
         catch (Exception e)
         {
-            throw new RuntimeException("failed to fetch Inventory", e);
+           log.error("failed to fetch Inventory", e);
+           return null;
+
+
         }
 
     }
@@ -65,7 +71,7 @@ public class InventoryServiceImpl implements InventoryService
 
     catch(Exception e)
         {
-            throw new RuntimeException("failed to update inventory stock", e);
+            log.error("failed to update inventory stock", e);
         }
     }
 }

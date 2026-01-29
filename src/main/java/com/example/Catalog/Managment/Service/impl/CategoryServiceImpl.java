@@ -6,10 +6,13 @@ import com.example.Catalog.Managment.Mapper.CategoryMappper;
 import com.example.Catalog.Managment.Repository.CategoryRepository;
 import com.example.Catalog.Managment.Service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService
@@ -29,7 +32,8 @@ public class CategoryServiceImpl implements CategoryService
         }
         catch (Exception e)
         {
-                throw new RuntimeException("failed to save category");
+                log.error("failed to save category",e);
+            return null;
         }
 
     }
@@ -42,13 +46,10 @@ public class CategoryServiceImpl implements CategoryService
             Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("category not found"));
             return categoryMappper.toDto(category);
         }
-        catch(RuntimeException e )
-        {
-            throw e;
-        }
         catch(Exception e)
         {
-            throw new RuntimeException("Category not found",e);
+            log.warn("Category not found",e);
+            return null;
         }
 
     }
@@ -65,7 +66,8 @@ public class CategoryServiceImpl implements CategoryService
         }
         catch(Exception e)
         {
-            throw new RuntimeException("Error fetching categories",e);
+          log.error("Error fetching categories",e);
+            return null;
         }
     }
 }

@@ -6,11 +6,13 @@ import com.example.Catalog.Managment.Mapper.ProductMapper;
 import com.example.Catalog.Managment.Repository.ProductRepository;
 import com.example.Catalog.Managment.Service.ProductService;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 
@@ -41,7 +43,8 @@ public class ProductServiceimpl implements ProductService
         }
         catch (Exception e)
         {
-            throw new RuntimeException("Failed to create Product",e);
+            log.error("Failed to create Product",e);
+            return null;
         }
 
     }
@@ -56,7 +59,8 @@ public class ProductServiceimpl implements ProductService
         }
             catch(Exception e)
             {
-                throw new RuntimeException("Failed to get Product", e);
+                log.error("Failed to get Product", e);
+                return null;
             }
 
     }
@@ -76,7 +80,8 @@ public class ProductServiceimpl implements ProductService
         }
         catch (Exception e)
         {
-            throw new RuntimeException("Failed to update Product",e);
+            log.error("Failed to update Product",e);
+            return null;
         }
       
     }
@@ -85,14 +90,15 @@ public class ProductServiceimpl implements ProductService
     public List<ProductDto> getAllproducts() {
         try
         {
-            return productRepository.findAll()
+            return productRepository.findByAvailabilityTrue()
                     .stream()
                     .map(productMapper::toDto)
                     .toList();
         }
         catch(Exception e)
         {
-            throw new RuntimeException("Failed to get Products",e);
+            log.error("Failed to get Products",e);
+            return null;
         }
     }
 
@@ -103,11 +109,12 @@ public class ProductServiceimpl implements ProductService
         {
             Product product = productRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Product not found"));
-            productRepository.delete(product);
+            product.setAvailability(false);
+            productRepository.save(product);
         }
         catch(Exception e)
         {
-            throw new RuntimeException("Failed to delete Product",e);
+            log.error("Failed to delete Product",e);
         }
 
     }

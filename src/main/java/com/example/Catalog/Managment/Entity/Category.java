@@ -18,7 +18,6 @@ public class Category
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    @Column(length = 200)
     private String description;
     private boolean active;
 

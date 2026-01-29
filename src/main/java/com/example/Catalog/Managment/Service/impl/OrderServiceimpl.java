@@ -13,11 +13,13 @@ import com.example.Catalog.Managment.Repository.ProductRepository;
 import com.example.Catalog.Managment.Service.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceimpl implements OrderService {
@@ -77,7 +79,8 @@ public class OrderServiceimpl implements OrderService {
             return ordersMapper.toDto(savedOrder);
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to place order", e);
+            log.error("Failed to place order", e);
+            return null;
         }
     }
 
@@ -91,7 +94,8 @@ public class OrderServiceimpl implements OrderService {
             return ordersMapper.toDto(order);
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to fetch order with id: " + id, e);
+           log.error("Failed to fetch order with id: " + id, e);
+            return null;
         }
     }
 }

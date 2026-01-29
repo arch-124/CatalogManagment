@@ -3,7 +3,10 @@ package com.example.Catalog.Managment.Controller;
 import com.example.Catalog.Managment.Dto.CategoryDto;
 import com.example.Catalog.Managment.Service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.yaml.snakeyaml.tokens.ScalarToken;
 
 import java.util.List;
 
@@ -15,21 +18,24 @@ public class CategoryController
    private final CategoryService categoryService;
 
    @PostMapping
-    public CategoryDto create(@RequestBody CategoryDto categoryDto)
+    public ResponseEntity <CategoryDto> create(@RequestBody CategoryDto categoryDto)
    {
-       return categoryService.create(categoryDto);
+       CategoryDto created = categoryService.create(categoryDto);
+       return ResponseEntity.status(HttpStatus.CREATED).body(created);
    }
 
    @GetMapping("/{id}")
-   public CategoryDto getById(@PathVariable int id)
+   public ResponseEntity <CategoryDto> getById(@PathVariable int id)
    {
-       return categoryService.getById(id);
+       CategoryDto catgories =  categoryService.getById(id);
+       return ResponseEntity.ok(catgories);
    }
 
    @GetMapping
-    public List<CategoryDto> getAll()
+    public ResponseEntity <List<CategoryDto>> getAll()
    {
-       return categoryService.getAll();
+       List <CategoryDto> catgories =  categoryService.getAll();
+       return ResponseEntity.ok(catgories);
    }
 
 }
