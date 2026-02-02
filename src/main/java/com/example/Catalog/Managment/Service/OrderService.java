@@ -1,12 +1,12 @@
 package com.example.Catalog.Managment.Service;
 
-import com.example.Catalog.Managment.Dto.OrdersDto;
-import com.example.Catalog.Managment.Entity.Orders;
-import org.hibernate.query.Order;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
+import com.example.Catalog.Managment.Dto.Request.OrderRequestdto;
+import com.example.Catalog.Managment.Dto.Response.OrderResponsedto;
+import com.example.Catalog.Managment.Response.ApiResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface OrderService
 {
-    OrdersDto placeOrder(OrdersDto ordersDto);
-    OrdersDto getById(int id);
+    ResponseEntity<ApiResponse<OrderResponsedto>> placeOrder(OrderRequestdto orderRequestdto);
+    ResponseEntity<ApiResponse<OrderResponsedto>> getById(int id);
 }

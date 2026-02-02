@@ -2,6 +2,7 @@ package com.example.Catalog.Managment.Controller;
 
 import com.example.Catalog.Managment.Dto.InventoryDto;
 import com.example.Catalog.Managment.Entity.Inventory;
+import com.example.Catalog.Managment.Response.ApiResponse;
 import com.example.Catalog.Managment.Service.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,24 +16,24 @@ public class InventoryController
     public final InventoryService inventoryService;
 
     @PostMapping
-    public ResponseEntity <InventoryDto> create(@RequestBody InventoryDto inventoryDto)
+    public ResponseEntity <ApiResponse<InventoryDto>> create(@RequestBody InventoryDto inventoryDto)
     {
-        InventoryDto created = inventoryService.create(inventoryDto);
-        return ResponseEntity.ok(created);
+        return inventoryService.create(inventoryDto);
+
     }
 
     @GetMapping("/product/{productId}")
-    public ResponseEntity<InventoryDto> getProductById(@PathVariable int productId )
+    public ResponseEntity<ApiResponse<InventoryDto>> getProductById(@PathVariable int productId )
     {
-        InventoryDto products =  inventoryService.getProductById(productId);
-        return ResponseEntity.ok(products);
+        return inventoryService.getProductById(productId);
+
     }
 
     @PutMapping("/product/{productId}")
-    public ResponseEntity <Void>  updatestock(@PathVariable int productId, @RequestParam int stock)
+    public ResponseEntity <ApiResponse<String>>  updatestock(@PathVariable int productId, @RequestParam int stock)
     {
-            inventoryService.updatestock(productId, stock);
-            return ResponseEntity.noContent().build();
+           return inventoryService.updatestock(productId, stock);
+
 
 
 

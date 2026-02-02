@@ -2,6 +2,7 @@ package com.example.Catalog.Managment.Controller;
 
 import com.example.Catalog.Managment.Dto.CustomerDto;
 import com.example.Catalog.Managment.Entity.Customer;
+import com.example.Catalog.Managment.Response.ApiResponse;
 import com.example.Catalog.Managment.Service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,23 +21,21 @@ public class CustomerController
 {
     private final CustomerService customerService;
     @PostMapping
-    public ResponseEntity<CustomerDto> create (@Valid @RequestBody CustomerDto customerDto)
+    public ResponseEntity<ApiResponse<CustomerDto>> create (@Valid @RequestBody CustomerDto customerDto)
     {
-        CustomerDto created = customerService.create(customerDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        return customerService.create(customerDto);
+
     }
     @GetMapping("/{id}")
-        public ResponseEntity<CustomerDto> getById(@PathVariable int id)
+        public ResponseEntity<ApiResponse<CustomerDto>> getById(@PathVariable int id)
     {
-        CustomerDto getCustomer = customerService.getById(id);
-        return getCustomer!= null
-                ? ResponseEntity.ok(getCustomer)
-                : ResponseEntity.badRequest().build();
+        return customerService.getById(id);
+
     }
     @GetMapping
-    public ResponseEntity<List<CustomerDto>> getAll()
+    public ResponseEntity<ApiResponse<List<CustomerDto>>> getAll()
     {
-        return ResponseEntity.ok(customerService.getAll());
+        return customerService.getAll();
     }
 
 

@@ -24,10 +24,15 @@ public class Orders
     private String orderstatus;
     private Double totalamount;
 
+    @PrePersist
+    void  prePersist()
+    {
+        this.orderdate = LocalDate.now();
+    }
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "customer_id",nullable = false)
     private Customer customer;
 }

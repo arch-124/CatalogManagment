@@ -1,6 +1,7 @@
 package com.example.Catalog.Managment.Controller;
 
 import com.example.Catalog.Managment.Dto.ProductDto;
+import com.example.Catalog.Managment.Response.ApiResponse;
 import com.example.Catalog.Managment.Service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,38 +17,37 @@ public class ProductController
 {
     private final ProductService service;
     @PostMapping
-        public ResponseEntity<ProductDto> create(@RequestBody ProductDto dto)
+        public ResponseEntity<ApiResponse<ProductDto>> create(@RequestBody ProductDto dto)
         {
-           ProductDto created =  service.createProduct(dto);
-           return ResponseEntity.status(HttpStatus.CREATED).body(created);
+           return service.createProduct(dto);
+
         }
 
 
     @GetMapping("/{id}")
-            public ResponseEntity<ProductDto> getProductbyid(@PathVariable int id)
+            public ResponseEntity<ApiResponse<ProductDto>> getProductbyid(@PathVariable int id)
             {
-                ProductDto product = service.getProductbyid(id);
-                return ResponseEntity.ok(product);
+                return service.getProductbyid(id);
+
             }
     @GetMapping
-        public ResponseEntity<List<ProductDto>> getAll()
+        public ResponseEntity<ApiResponse<List<ProductDto>>> getAll()
         {
-           List<ProductDto> products = service.getAllproducts();
-           return ResponseEntity.ok(products);
+           return service.getAllproducts();
 
         }
     @PutMapping("/{id}")
-        public ResponseEntity<ProductDto> updateProduct(@PathVariable int id, @RequestBody ProductDto dto)
+        public ResponseEntity<ApiResponse<ProductDto>> updateProduct(@PathVariable int id, @RequestBody ProductDto dto)
         {
-            dto.setId(id);
-            ProductDto updated =  service.updateProduct(dto);
-            return ResponseEntity.ok(updated);
+
+            return service.updateProduct(dto);
+
         }
     @DeleteMapping("/{id}")
-        public ResponseEntity<Void> deleteProduct(@PathVariable int id)
+        public ResponseEntity<ApiResponse<String>> deleteProduct(@PathVariable int id)
         {
-            service.deleteProduct(id);
-            return ResponseEntity.noContent().build();
+            return service.deleteProduct(id);
+
         }
 
 

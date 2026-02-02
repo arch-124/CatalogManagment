@@ -30,6 +30,11 @@ public class Product
     @OneToOne(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Inventory inventory;
 
+    @PrePersist
+    public void setDefaults() {
+        this.availability = true;
+    }
+
 
     @ManyToOne
     @JoinColumn(name = "category_id")

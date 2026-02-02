@@ -10,8 +10,8 @@ public interface ProductMapper
 {
      ProductDto toDto(Product product);
 
-    @Mapping(target = "description", ignore = true)
-    @Mapping(target = "availability", ignore = true)
+//    @Mapping(target = "description", ignore = true)
+//    @Mapping(target = "availability", ignore = true)
 
     Product toEntity(ProductDto dto);
 
