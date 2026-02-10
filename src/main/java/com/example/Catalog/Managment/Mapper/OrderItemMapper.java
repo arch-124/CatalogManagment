@@ -10,8 +10,9 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface OrderItemMapper {
 
-    @Mapping(source = "product.id", target = "productId")
-    @Mapping(source = "product.name", target = "productName")
+    @Mapping(source = "sku.id", target = "skuId")
+    @Mapping(source = "sku.product.id", target = "productId")
+    @Mapping(source = "sku.product.name", target = "productName")
     @Mapping(source = "priceAtPurchase", target = "price")
     @Mapping(source = "totalPrice", target = "subtotal")
     OrderItemsResponsedto toDto(OrderItem item);

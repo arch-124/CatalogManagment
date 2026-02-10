@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 public class CategoryDto
 {
+
     private Integer id;
     @NotBlank
     @Size(min = 3, max = 50)

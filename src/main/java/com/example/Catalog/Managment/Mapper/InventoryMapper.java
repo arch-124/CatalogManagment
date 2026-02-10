@@ -8,9 +8,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface InventoryMapper
 {
-    @Mapping(source = "product.id",target = "productId")
+    @Mapping(source = "sku.id",target = "skuId")
     InventoryDto toDto(Inventory inventory);
 
-    @Mapping(target = "product", ignore = true)
+    @Mapping(target = "sku", ignore = true)
     Inventory toEntity(InventoryDto inventoryDto);
 }

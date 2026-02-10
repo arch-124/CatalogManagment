@@ -1,7 +1,6 @@
 package com.example.Catalog.Managment.Controller;
 
 import com.example.Catalog.Managment.Dto.InventoryDto;
-import com.example.Catalog.Managment.Entity.Inventory;
 import com.example.Catalog.Managment.Response.ApiResponse;
 import com.example.Catalog.Managment.Service.InventoryService;
 import lombok.RequiredArgsConstructor;

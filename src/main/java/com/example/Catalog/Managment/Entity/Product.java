@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @NoArgsConstructor
@@ -21,20 +24,20 @@ public class Product
     @Column(length = 100)
     private String name;
 
-    private String description;
 
-    private int price;
 
-    private boolean availability;
 
-    @OneToOne(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private Inventory inventory;
+    private Boolean availability;
+
+//    @OneToOne(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+//    private Inventory inventory;
 
     @PrePersist
     public void setDefaults() {
         this.availability = true;
     }
-
+    @OneToMany(mappedBy = "product")
+    private List<Sku> skus = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "category_id")

@@ -9,7 +9,7 @@ public class OrderItemsRequestdto
 {
     @NotNull
     @Min(value =1 )
-    private Integer productId;
+    private Long skuId;
 
     @NotNull
     @Min(value =1 )

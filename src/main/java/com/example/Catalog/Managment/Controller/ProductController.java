@@ -1,6 +1,7 @@
 package com.example.Catalog.Managment.Controller;
 
 import com.example.Catalog.Managment.Dto.ProductDto;
+import com.example.Catalog.Managment.Dto.ProductcreateDto;
 import com.example.Catalog.Managment.Response.ApiResponse;
 import com.example.Catalog.Managment.Service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class ProductController
 {
     private final ProductService service;
     @PostMapping
-        public ResponseEntity<ApiResponse<ProductDto>> create(@RequestBody ProductDto dto)
+        public ResponseEntity<ApiResponse<ProductDto>> create(@RequestBody ProductcreateDto dto)
         {
            return service.createProduct(dto);
 
@@ -44,10 +45,16 @@ public class ProductController
 
         }
     @DeleteMapping("/{id}")
-        public ResponseEntity<ApiResponse<String>> deleteProduct(@PathVariable int id)
-        {
-            return service.deleteProduct(id);
+        public ResponseEntity<ApiResponse<String>> deleteProduct(@PathVariable int id) {
+        return service.deleteProduct(id);
 
+    }
+
+    @PutMapping("category/{id}")
+
+    public ResponseEntity<ApiResponse<ProductDto>> updateCategory(@PathVariable int id,@RequestBody ProductDto dto)
+        {
+           return service.updateCategory(id,dto);
         }
 
 

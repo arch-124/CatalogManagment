@@ -20,6 +20,6 @@ public class CustomerDto
     private String email;
 
     @Pattern(regexp = "^[6-9]\\d{9}$", message = "enter valid 10 digit indian phone number")
-    private String phonenumber;
+    private String phoneNumber;
 
 }

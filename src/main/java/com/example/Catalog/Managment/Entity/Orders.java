@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.mapstruct.ap.internal.model.GeneratedType;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +19,10 @@ public class Orders
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String ordernumber;
+    private Long id;
     private LocalDate orderdate;
     private String orderstatus;
-    private Double totalamount;
+    private BigDecimal totalamount;
 
     @PrePersist
     void  prePersist()

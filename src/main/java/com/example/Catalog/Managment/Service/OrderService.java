@@ -8,5 +8,5 @@ import org.springframework.http.ResponseEntity;
 public interface OrderService
 {
     ResponseEntity<ApiResponse<OrderResponsedto>> placeOrder(OrderRequestdto orderRequestdto);
-    ResponseEntity<ApiResponse<OrderResponsedto>> getById(int id);
+    ResponseEntity<ApiResponse<OrderResponsedto>> getById(Long id);
 }

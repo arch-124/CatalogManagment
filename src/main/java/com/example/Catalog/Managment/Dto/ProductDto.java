@@ -1,5 +1,7 @@
 package com.example.Catalog.Managment.Dto;
 
+import com.example.Catalog.Managment.Entity.Category;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,11 +17,16 @@ import lombok.NoArgsConstructor;
 public class ProductDto
 
 {
+
     private Integer id;
     @NotBlank
     private String name;
-    @NotNull
-    @Min(value = 1, message = "price should be greater than 0")
-    private Integer price;
+
+
+    private Integer categoryId;
+
+
+   private String categoryName;
+
 
 }

@@ -23,8 +23,7 @@ public class Customer
     @Column(nullable = false)
     private String email;
 
-
-    private String phonenumber;
+    private String phoneNumber;
 
     @Column(nullable = false,updatable = false)
     private LocalDate createdAt;

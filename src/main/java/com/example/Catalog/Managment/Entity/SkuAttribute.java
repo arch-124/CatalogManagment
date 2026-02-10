@@ -1,24 +1,22 @@
 package com.example.Catalog.Managment.Entity;
 
-import com.example.Catalog.Managment.Entity.Sku;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class Inventory {
+@AllArgsConstructor
+public class SkuAttribute {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer quantity;
+    private String name;
+    private String value;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "sku_id", nullable = false)
     private Sku sku;
 }

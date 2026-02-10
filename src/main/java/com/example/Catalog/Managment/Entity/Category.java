@@ -21,6 +21,11 @@ public class Category
     private String description;
     private boolean active;
 
+    @PrePersist
+    void oncreate()
+    {
+        this.active = true;
+    }
     @OneToMany(mappedBy = "category")
     private List<Product> products;
 }

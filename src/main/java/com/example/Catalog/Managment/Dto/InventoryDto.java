@@ -15,9 +15,9 @@ import lombok.NoArgsConstructor;
 public class InventoryDto
 {
     @NotNull
-    @Min(value = 1, message = "product id should be positive")
-    private Integer productId;
-    private Integer id;
+    @Min(value = 1, message = "skui id should be positive")
+    private Long skuId;
+
     @NotNull
     @Min(value = 0,message = "quantity can not be negative")
     private Integer quantity;

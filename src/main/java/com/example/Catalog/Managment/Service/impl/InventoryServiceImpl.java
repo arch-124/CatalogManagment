@@ -3,9 +3,11 @@ package com.example.Catalog.Managment.Service.impl;
 import com.example.Catalog.Managment.Dto.InventoryDto;
 import com.example.Catalog.Managment.Entity.Inventory;
 import com.example.Catalog.Managment.Entity.Product;
+import com.example.Catalog.Managment.Entity.Sku;
 import com.example.Catalog.Managment.Mapper.InventoryMapper;
 import com.example.Catalog.Managment.Repository.InventoryRepository;
 import com.example.Catalog.Managment.Repository.ProductRepository;
+import com.example.Catalog.Managment.Repository.SkuRepository;
 import com.example.Catalog.Managment.Response.ApiResponse;
 import com.example.Catalog.Managment.Service.InventoryService;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +23,23 @@ public class InventoryServiceImpl implements InventoryService
 {
    public final InventoryRepository inventoryRepository;
    public final InventoryMapper inventoryMapper;
-   public final ProductRepository productRepository;
+   public final SkuRepository skuRepository;
+
 
     @Override
     public ResponseEntity<ApiResponse<InventoryDto>> create(InventoryDto dto)
     {
         try
         {
-            Product product = productRepository
-                    .findById(dto.getProductId())
-                    .orElseThrow(()-> new RuntimeException("product not found with given id"));
-            Inventory inventory = inventoryMapper.toEntity(dto);
-            inventory.setProduct(product);
+            Sku sku = skuRepository.findById(dto.getSkuId())
+                    .orElseThrow(() -> new RuntimeException("SKU not found"));
+
+            Inventory inventory = new Inventory();
+            inventory.setSku(sku);
+            inventory.setQuantity(dto.getQuantity());
+
             Inventory inventorySaved = inventoryRepository.save(inventory);
+
             return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(
                     true,
                     HttpStatus.CREATED.value(),
