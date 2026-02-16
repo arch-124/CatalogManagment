@@ -9,7 +9,7 @@ import java.util.List;
 public interface CategoryService
 {
     ResponseEntity<ApiResponse<CategoryDto>> create(CategoryDto categoryDto);
-    ResponseEntity<ApiResponse<CategoryDto>> getById(int id);
+    ResponseEntity<ApiResponse<CategoryDto>> getById(Long id);
     ResponseEntity<ApiResponse<List<CategoryDto>>> getAll();
 
 }

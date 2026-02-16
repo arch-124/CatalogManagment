@@ -9,4 +9,9 @@ public interface OrderService
 {
     ResponseEntity<ApiResponse<OrderResponsedto>> placeOrder(OrderRequestdto orderRequestdto);
     ResponseEntity<ApiResponse<OrderResponsedto>> getById(Long id);
+    ResponseEntity<ApiResponse<OrderResponsedto>> confirmOrder(Long orderId);
+    ResponseEntity<ApiResponse<OrderResponsedto>> cancelOrder(Long orderId);
+    ResponseEntity<ApiResponse<OrderResponsedto>> requestReturn(Long id);
+    ResponseEntity<ApiResponse<OrderResponsedto>> approveReturn(Long id);
+    ResponseEntity<ApiResponse<OrderResponsedto>> completeReturn(Long id);
 }

@@ -22,14 +22,14 @@ public class InventoryController
     }
 
     @GetMapping("/product/{productId}")
-    public ResponseEntity<ApiResponse<InventoryDto>> getProductById(@PathVariable int productId )
+    public ResponseEntity<ApiResponse<InventoryDto>> getProductById(@PathVariable Long productId )
     {
         return inventoryService.getProductById(productId);
 
     }
 
     @PutMapping("/product/{productId}")
-    public ResponseEntity <ApiResponse<String>>  updatestock(@PathVariable int productId, @RequestParam int stock)
+    public ResponseEntity <ApiResponse<String>>  updatestock(@PathVariable Long productId, @RequestParam Long stock)
     {
            return inventoryService.updatestock(productId, stock);
 

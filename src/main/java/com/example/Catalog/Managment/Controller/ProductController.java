@@ -26,14 +26,18 @@ public class ProductController
 
 
     @GetMapping("/{id}")
-            public ResponseEntity<ApiResponse<ProductDto>> getProductbyid(@PathVariable int id)
+            public ResponseEntity<ApiResponse<ProductDto>> getProductbyid(@PathVariable Long id)
             {
                 return service.getProductbyid(id);
 
             }
     @GetMapping
-        public ResponseEntity<ApiResponse<List<ProductDto>>> getAll()
+        public ResponseEntity<ApiResponse<List<ProductDto>>> getAll(@RequestParam(required = false) Long categoryId)
         {
+            if(categoryId != null)
+            {
+                return service.getProductsByCategory(categoryId);
+            }
            return service.getAllproducts();
 
         }
@@ -45,17 +49,17 @@ public class ProductController
 
         }
     @DeleteMapping("/{id}")
-        public ResponseEntity<ApiResponse<String>> deleteProduct(@PathVariable int id) {
+        public ResponseEntity<ApiResponse<String>> deleteProduct(@PathVariable Long id) {
         return service.deleteProduct(id);
 
     }
 
-    @PutMapping("category/{id}")
-
-    public ResponseEntity<ApiResponse<ProductDto>> updateCategory(@PathVariable int id,@RequestBody ProductDto dto)
-        {
-           return service.updateCategory(id,dto);
-        }
+//    @PutMapping("category/{id}")
+//
+//    public ResponseEntity<ApiResponse<ProductDto>> updateCategory(@PathVariable int id,@RequestBody ProductDto dto)
+//        {
+//           return service.updateCategory(id,dto);
+//        }
 
 
 

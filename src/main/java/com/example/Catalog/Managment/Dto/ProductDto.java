@@ -18,7 +18,7 @@ public class ProductDto
 
 {
 
-    private Integer id;
+    private Long id;
     @NotBlank
     private String name;
 

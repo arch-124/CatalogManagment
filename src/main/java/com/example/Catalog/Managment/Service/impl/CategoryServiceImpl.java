@@ -53,7 +53,7 @@ public class CategoryServiceImpl implements CategoryService
     }
 
     @Override
-    public ResponseEntity<ApiResponse<CategoryDto>> getById(int id)
+    public ResponseEntity<ApiResponse<CategoryDto>> getById(Long id)
     {
         try
         {

@@ -16,16 +16,11 @@ public class ProductcreateDto {
     @NotBlank
     private String name;
 
-    // category created along with product
-    @Valid
-    @NotNull
-    private CategoryDto category;
 
-    // variants (SKUs)
     @Valid
     @NotEmpty
     private List<SkuCreateDto> skus;
 
-    // optional if using existing category
+
     private Integer categoryId;
 }

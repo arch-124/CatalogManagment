@@ -27,7 +27,7 @@ public class CustomerController
 
     }
     @GetMapping("/{id}")
-        public ResponseEntity<ApiResponse<CustomerDto>> getById(@PathVariable int id)
+        public ResponseEntity<ApiResponse<CustomerDto>> getById(@PathVariable Long id)
     {
         return customerService.getById(id);
 

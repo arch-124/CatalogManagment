@@ -52,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService
     }
 
     @Override
-    public ResponseEntity<ApiResponse<CustomerDto>> getById(int id)
+    public ResponseEntity<ApiResponse<CustomerDto>> getById(Long id)
     {
         try
         {

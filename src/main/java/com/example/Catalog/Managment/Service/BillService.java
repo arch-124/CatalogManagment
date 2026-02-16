@@ -30,7 +30,7 @@ public class BillService
 
         return BillResponseDto.builder()
                 .orderId(orders.getId())
-                .orderStatus(orders.getOrderstatus())
+                //.orderStatus(orders.getOrderstatus())
                 .orderDate(orders.getOrderdate())
                 .customerName(orders.getCustomer().getName())
                 .customerEmail(orders.getCustomer().getEmail())

@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 public interface InventoryService
 {
     ResponseEntity<ApiResponse<InventoryDto>> create(InventoryDto dto);
-    ResponseEntity<ApiResponse<InventoryDto>> getProductById(int productId);
-    ResponseEntity<ApiResponse<String>> updatestock(int productId, int stock);
+    ResponseEntity<ApiResponse<InventoryDto>> getProductById(Long productId);
+    ResponseEntity<ApiResponse<String>> updatestock(Long productId, Long stock);
 
 }

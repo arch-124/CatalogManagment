@@ -10,7 +10,7 @@ import java.util.List;
 public class OrderRequestdto
 {
     @NotNull
-    private Integer customerId;
+    private Long customerId;
 
 
     @NotNull

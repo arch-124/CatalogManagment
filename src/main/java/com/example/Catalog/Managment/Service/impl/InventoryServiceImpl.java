@@ -2,11 +2,9 @@ package com.example.Catalog.Managment.Service.impl;
 
 import com.example.Catalog.Managment.Dto.InventoryDto;
 import com.example.Catalog.Managment.Entity.Inventory;
-import com.example.Catalog.Managment.Entity.Product;
 import com.example.Catalog.Managment.Entity.Sku;
 import com.example.Catalog.Managment.Mapper.InventoryMapper;
 import com.example.Catalog.Managment.Repository.InventoryRepository;
-import com.example.Catalog.Managment.Repository.ProductRepository;
 import com.example.Catalog.Managment.Repository.SkuRepository;
 import com.example.Catalog.Managment.Response.ApiResponse;
 import com.example.Catalog.Managment.Service.InventoryService;
@@ -36,7 +34,7 @@ public class InventoryServiceImpl implements InventoryService
 
             Inventory inventory = new Inventory();
             inventory.setSku(sku);
-            inventory.setQuantity(dto.getQuantity());
+            inventory.setQuantity(Long.valueOf(dto.getQuantity()));
 
             Inventory inventorySaved = inventoryRepository.save(inventory);
 
@@ -62,7 +60,7 @@ public class InventoryServiceImpl implements InventoryService
     }
 
     @Override
-    public ResponseEntity<ApiResponse<InventoryDto>> getProductById(int productId)
+    public ResponseEntity<ApiResponse<InventoryDto>> getProductById(Long productId)
     {
         try
         {
@@ -93,7 +91,7 @@ public class InventoryServiceImpl implements InventoryService
     }
 
     @Override
-    public ResponseEntity<ApiResponse<String>> updatestock(int productId, int stock)
+    public ResponseEntity<ApiResponse<String>> updatestock(Long productId, Long stock)
     {
         try
         {

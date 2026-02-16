@@ -1,5 +1,6 @@
 package com.example.Catalog.Managment.Entity;
 
+import com.example.Catalog.Managment.Enum.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +22,11 @@ public class Orders
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate orderdate;
-    private String orderstatus;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Order_status")
+    private OrderStatus orderstatus;
+
     private BigDecimal totalamount;
 
     @PrePersist

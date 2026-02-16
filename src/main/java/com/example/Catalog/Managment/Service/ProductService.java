@@ -11,11 +11,14 @@ import java.util.List;
 public interface ProductService
 {
     ResponseEntity<ApiResponse<ProductDto>> createProduct(ProductcreateDto dto);
-    ResponseEntity<ApiResponse<ProductDto>> getProductbyid(int id);
+    ResponseEntity<ApiResponse<ProductDto>> getProductbyid(Long id);
     ResponseEntity<ApiResponse<ProductDto>> updateProduct(ProductDto dto);
     ResponseEntity<ApiResponse<List<ProductDto>>> getAllproducts();
-    ResponseEntity<ApiResponse<String>> deleteProduct(int id);
+    ResponseEntity<ApiResponse<String>> deleteProduct(Long id);
+
+    ResponseEntity<ApiResponse<List<ProductDto>>> getProductsByCategory(Long categoryId);
 
 
-    ResponseEntity<ApiResponse<ProductDto>> updateCategory(int id,ProductDto dto);
+
+//    ResponseEntity<ApiResponse<ProductDto>> updateCategory(Long id,ProductDto dto);
 }

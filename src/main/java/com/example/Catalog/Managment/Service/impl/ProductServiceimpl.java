@@ -4,12 +4,13 @@ import com.example.Catalog.Managment.Dto.ProductDto;
 import com.example.Catalog.Managment.Dto.ProductcreateDto;
 import com.example.Catalog.Managment.Dto.SkuCreateDto;
 import com.example.Catalog.Managment.Entity.*;
+import com.example.Catalog.Managment.Mapper.InventoryMapper;
 import com.example.Catalog.Managment.Mapper.ProductMapper;
+import com.example.Catalog.Managment.Mapper.SkuMapper;
 import com.example.Catalog.Managment.Repository.*;
 import com.example.Catalog.Managment.Response.ApiResponse;
 import com.example.Catalog.Managment.Service.ProductService;
 import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.jar.Attributes;
+
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -33,6 +36,8 @@ public class ProductServiceimpl implements ProductService
     private  final InventoryRepository inventoryRepository;
     private final SkuAttributesRepository skuAttributesRepository;
     private final SkuRepository skuRepository;
+    private final SkuMapper skuMapper;
+    private final InventoryMapper inventoryMapper;
 
 
     @Override
@@ -41,36 +46,69 @@ public class ProductServiceimpl implements ProductService
 
         try {
 
-            Category category = new Category();
-            category.setName(dto.getCategory().getName());
-            category.setDescription(dto.getCategory().getDescription());
-            category.setActive(true);
+            Category category = categoryRepository.findById(Long.valueOf(dto.getCategoryId()))
+                    .orElseThrow(() ->
+                            new RuntimeException("Category does not exist. Create category first"));
 
-            Category savedCategory = categoryRepository.save(category);
+            //  Reuse product if already exists
 
+            List<Product> products = productRepository.findByName(dto.getName());
 
-            Product product = new Product();
-            product.setName(dto.getName());
-            product.setCategory(savedCategory);
-            product.setAvailability(true);
+            Product savedProduct;
 
-            Product savedProduct = productRepository.save(product);
+            if (!products.isEmpty()) {
+                savedProduct = products.get(0); // pick first product
+            } else {
+                Product p = productMapper.toEntity(dto);
+                p.setCategory(category);
 
+                savedProduct = productRepository.save(p);
 
+            }
+
+            // Process SKUs
             for (SkuCreateDto skuDto : dto.getSkus()) {
 
-                Sku sku = new Sku();
+                Sku existingSku = findExistingSku(savedProduct, skuDto);
+
+                // MERGE STOCK
+                if (existingSku != null) {
+
+                    Inventory inv = inventoryRepository
+                            .findBySkuId(existingSku.getId())
+                            .orElseThrow();
+
+                    int stock = skuDto.getInitialStock();
+
+                    int currentQty = Math.toIntExact(inv.getQuantity() == null ? 0 : inv.getQuantity());
+                    int currentAvail = inv.getAvailableQuantity() == null ? 0 : inv.getAvailableQuantity();
+
+                    inv.setQuantity((long) (currentQty + stock));
+                    inv.setAvailableQuantity(currentAvail + stock);
+
+                    inventoryRepository.save(inv);
+                    continue;
+                }
+
+                //NEW SKU
+                Sku sku = skuMapper.toEntity(skuDto);
                 sku.setProduct(savedProduct);
-                sku.setPrice(skuDto.getPrice());
-                sku.setActive(true);
                 sku.setSkucode(generateSkuCode(savedProduct, skuDto));
+
 
                 Sku savedSku = skuRepository.save(sku);
 
                 // Inventory
-                Inventory inventory = new Inventory();
+                Inventory inventory = inventoryMapper.toEntity(skuDto);
                 inventory.setSku(savedSku);
-                inventory.setQuantity(skuDto.getInitialStock());
+                if (inventory.getQuantity() == null) {
+                    inventory.setQuantity(Long.valueOf(skuDto.getInitialStock()));
+                }
+
+                if (inventory.getAvailableQuantity() == null) {
+                    inventory.setAvailableQuantity(skuDto.getInitialStock());
+                }
+
                 inventoryRepository.save(inventory);
 
                 // Attributes
@@ -79,17 +117,22 @@ public class ProductServiceimpl implements ProductService
                     attribute.setSku(savedSku);
                     attribute.setName(attr.getKey());
                     attribute.setValue(attr.getValue());
-
                     skuAttributesRepository.save(attribute);
                 }
+            }
+            ProductDto response = productMapper.toDto(savedProduct);
+
+            if (savedProduct.getCategory() != null) {
+                response.setCategoryId(Math.toIntExact(savedProduct.getCategory().getId()));
+                response.setCategoryName(savedProduct.getCategory().getName());
             }
 
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new ApiResponse<>(
                             true,
                             HttpStatus.CREATED.value(),
-                            "Product with category, SKUs, attributes and inventory created",
-                            productMapper.toDto(savedProduct)
+                            "Product created/merged successfully",
+                            response
                     ));
 
         } catch (Exception e) {
@@ -98,7 +141,7 @@ public class ProductServiceimpl implements ProductService
                     .body(new ApiResponse<>(
                             false,
                             INTERNAL_SERVER_ERROR.value(),
-                            "Failed to create product",
+                            e.getMessage(),
                             null
                     ));
         }
@@ -108,7 +151,7 @@ public class ProductServiceimpl implements ProductService
 
 
     @Override
-    public ResponseEntity<ApiResponse<ProductDto>> getProductbyid(int id)
+    public ResponseEntity<ApiResponse<ProductDto>> getProductbyid(Long id)
     {
         try {
             Product product = productRepository.findById(id)
@@ -178,7 +221,17 @@ public class ProductServiceimpl implements ProductService
         {
             List<ProductDto> products = productRepository.findByAvailabilityTrue()
                     .stream()
-                    .map(productMapper::toDto)
+                    .map(product -> {
+
+                        ProductDto dto = productMapper.toDto(product);
+
+                        if (product.getCategory() != null) {
+                            dto.setCategoryId(Math.toIntExact(product.getCategory().getId()));
+                            dto.setCategoryName(product.getCategory().getName());
+                        }
+
+                        return dto;
+                    })
                     .toList();
             return ResponseEntity.ok(new  ApiResponse<>(
                     true,
@@ -202,7 +255,7 @@ public class ProductServiceimpl implements ProductService
     }
 
     @Override
-    public ResponseEntity<ApiResponse<String>> deleteProduct(int id) {
+    public ResponseEntity<ApiResponse<String>> deleteProduct(Long id) {
         try {
             Product product = productRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -226,14 +279,14 @@ public class ProductServiceimpl implements ProductService
                     ));
         }
     }
-        public ResponseEntity<ApiResponse<ProductDto>> updateCategory(int id, ProductDto dto)
+        public ResponseEntity<ApiResponse<ProductDto>> updateCategory(Long id, ProductDto dto)
         {
             try
             {   log.info("inside method");
                 Product product = productRepository.findById(id)
                         .orElseThrow(() -> new RuntimeException("Product not found"));
                 log.info("product:{}",product);
-                Category category = categoryRepository.findById(dto.getCategoryId())
+                Category category = categoryRepository.findById(Long.valueOf(dto.getCategoryId()))
                         .orElseThrow(() -> new RuntimeException("Category not found"));
 
                 product.setCategory(category);
@@ -260,6 +313,53 @@ public class ProductServiceimpl implements ProductService
             }
 
         }
+        @Override
+        public ResponseEntity<ApiResponse<List<ProductDto>>> getProductsByCategory (Long categoryId)
+        {
+            try
+            {
+                Category category = categoryRepository.findById(categoryId)
+                        .orElseThrow(() -> new RuntimeException("Category not found"));
+
+                List<ProductDto> products = productRepository
+                        .findByCategory_IdAndAvailabilityTrue(categoryId)
+                        .stream()
+                        .map(product -> {
+
+                            ProductDto dto = productMapper.toDto(product);
+
+                            if (product.getCategory() != null) {
+                                dto.setCategoryId(Math.toIntExact(product.getCategory().getId()));
+                                dto.setCategoryName(product.getCategory().getName());
+                            }
+
+                            return dto;
+                        })
+
+                        .toList();
+
+                return ResponseEntity.ok(new ApiResponse<>(
+                        true,
+                        HttpStatus.OK.value(),
+                        "products fetched by category ",
+                        products
+                ));
+
+            }
+            catch (Exception e)
+            {
+                return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(
+                        new ApiResponse<>(
+                                false,
+                                INTERNAL_SERVER_ERROR.value(),
+                                "Failed to fetch products by category",
+                                null
+                        )
+                );
+            }
+
+        }
+
 
 
 
@@ -282,5 +382,40 @@ public class ProductServiceimpl implements ProductService
                 + "-"
                 + System.nanoTime();
     }
+
+    private Sku findExistingSku(Product product, SkuCreateDto dto) {
+
+        List<Sku> skus = skuRepository.findByProductId(product.getId());
+
+        for (Sku sku : skus) {
+
+            List<SkuAttribute> attrs = skuAttributesRepository.findBySkuId(sku.getId());
+
+            if (attributesMatch(attrs, dto.getAttributes())) {
+                return sku;
+            }
+        }
+
+        return null;
+    }
+
+    private boolean attributesMatch(
+            List<SkuAttribute> existing,
+            Map<String, String> incoming) {
+
+        if (existing.size() != incoming.size()) return false;
+
+        for (SkuAttribute e : existing) {
+
+            String val = incoming.get(e.getName());
+            if (val == null) return false;
+
+            if (!val.equalsIgnoreCase(e.getValue())) return false;
+        }
+
+        return true;
+    }
+
+
 
 }

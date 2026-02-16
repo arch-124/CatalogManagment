@@ -6,15 +6,14 @@ import com.example.Catalog.Managment.Entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
-public interface ProductMapper
-{
-    @Mapping(source = "category.id", target = "categoryId")
-     ProductDto toDto(Product product);
+@Mapper(componentModel = "spring",uses = {SkuMapper.class})
+public interface ProductMapper {
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "availability", constant = "true")
+    Product toEntity(ProductcreateDto dto);
 
-    @Mapping(source = "id", target = "category.id")
-    Product toEntity(ProductDto dto);
-
-
+    ProductDto toDto(Product product);
 }
+

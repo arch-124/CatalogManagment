@@ -20,17 +20,13 @@ public class Product
 {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @Column(length = 100)
     private String name;
 
 
-
-
     private Boolean availability;
 
-//    @OneToOne(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
-//    private Inventory inventory;
 
     @PrePersist
     public void setDefaults() {

@@ -26,7 +26,7 @@ public class CategoryController
    }
 
    @GetMapping("/{id}")
-   public ResponseEntity<ApiResponse<CategoryDto>> getById(@PathVariable int id)
+   public ResponseEntity<ApiResponse<CategoryDto>> getById(@PathVariable Long id)
    {
        return categoryService.getById(id);
 

@@ -32,4 +32,33 @@ public class OrderController {
 
 
     }
+
+    @PostMapping("/{orderId}/confirm")
+    public ResponseEntity<ApiResponse<OrderResponsedto>> confirmOrder(@PathVariable Long orderId)
+    {
+        return orderService.confirmOrder(orderId);
+    }
+
+    @PostMapping("/{orderId}/cancel")
+    public ResponseEntity<ApiResponse<OrderResponsedto>> cancelOrder(@PathVariable Long orderId)
+    {
+        return orderService.cancelOrder(orderId);
+    }
+
+    @PostMapping("/{orderId}/return-request")
+    public ResponseEntity<ApiResponse<OrderResponsedto>> requestReturn(@PathVariable Long orderId)
+    {
+        return orderService.requestReturn(orderId);
+    }
+    @PostMapping("/{orderId}/approve-request")
+    public ResponseEntity<ApiResponse<OrderResponsedto>> approveReturn(@PathVariable Long orderId)
+    {
+        return orderService.approveReturn(orderId);
+    }
+    @PostMapping("/{orderId}/complete-request")
+    public ResponseEntity<ApiResponse<OrderResponsedto>> completeReturn(@PathVariable Long orderId)
+    {
+        return orderService.completeReturn(orderId);
+    }
+
 }
